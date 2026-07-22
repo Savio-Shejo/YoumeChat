@@ -1,9 +1,8 @@
 import dns from "node:dns";
 
-dns.setServers([
-  "103.199.160.80",
-  "103.160.195.230",
-]);
+// Use IPv4 first for DNS resolution consistency
+dns.setDefaultResultOrder("ipv4first");
+
 
 import mongoose from "mongoose";
 import { env } from "./env.config";
