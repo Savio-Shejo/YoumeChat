@@ -43,9 +43,7 @@ export const handleConnection = (io: Server) => {
       username: user.username,
     });
 
-    // Register message and call signaling socket event handlers
-    registerMessageHandlers(io, socket);
-    registerCallHandlers(io, socket);
+
 
     socket.on('disconnect', async () => {
       loggers.socket.info({ userId: user._id, username: user.username }, 'User disconnected from Socket.IO');

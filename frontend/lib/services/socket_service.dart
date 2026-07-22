@@ -4,7 +4,7 @@ import '../core/constants/app_constants.dart';
 class SocketService {
   io.Socket? _socket;
   bool _isConnected = false;
-  String? _lastToken;
+  String? _currentChatId;
 
   bool get isConnected => _isConnected;
   io.Socket? get socket => _socket;
@@ -29,11 +29,17 @@ class SocketService {
     _socket!.onConnect((_) {
       _isConnected = true;
       print('Socket.IO Client Connected successfully');
+      if (_currentChatId != null) {
+        _socket?.emit('join_chat', {'chatId': _currentChatId});
+      }
     });
 
     _socket!.onReconnect((_) {
       _isConnected = true;
       print('Socket.IO Reconnected to server');
+      if (_currentChatId != null) {
+        _socket?.emit('join_chat', {'chatId': _currentChatId});
+      }
     });
 
     _socket!.onDisconnect((_) {
@@ -47,10 +53,16 @@ class SocketService {
   }
 
   void joinChat(String chatId) {
-    _socket?.emit('join_chat', {'chatId': chatId});
+    _currentChatId = chatId;
+    if (_socket != null && _socket!.connected) {
+      _socket?.emit('join_chat', {'chatId': chatId});
+    }
   }
 
   void leaveChat(String chatId) {
+    if (_currentChatId == chatId) {
+      _currentChatId = null;
+    }
     _socket?.emit('leave_chat', {'chatId': chatId});
   }
 
