@@ -12,7 +12,7 @@
 
 <br/>
 
-### 📱 [📥 Download YoumeChat v1.apk (Direct Download)](https://github.com/Savio-Shejo/YoumeChat/raw/main/releases/YoumeChat-v1.apk)
+### 📱 [📥 Download YoumeChat v1.apk — 18.7 MB (Fast Download)](https://github.com/Savio-Shejo/YoumeChat/raw/main/releases/YoumeChat-v1.apk)
 
 ---
 
