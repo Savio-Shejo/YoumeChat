@@ -38,13 +38,38 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
 
       final socket = socketService.socket;
       if (socket != null) {
-        socket.on('message:new', _onNewMessageReceived);
+        socket.off('receive_message', _onNewMessageReceived);
+        socket.off('message:new', _onNewMessageReceived);
         socket.on('receive_message', _onNewMessageReceived);
+        socket.on('message:new', _onNewMessageReceived);
         socket.on('typing:start', _onTypingStart);
         socket.on('typing:stop', _onTypingStop);
         socket.on('call:invite', _onIncomingCall);
       }
     });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    _messageController.dispose();
+    _typingTimer?.cancel();
+
+    try {
+      final socketService = ref.read(socketServiceProvider);
+      socketService.leaveChat(widget.chatId);
+      final socket = socketService.socket;
+      if (socket != null) {
+        socket.off('receive_message', _onNewMessageReceived);
+        socket.off('message:new', _onNewMessageReceived);
+        socket.off('typing:start', _onTypingStart);
+        socket.off('typing:stop', _onTypingStop);
+        socket.off('call:invite', _onIncomingCall);
+      }
+    } catch (_) {}
+
+    super.dispose();
   }
 
   void _onIncomingCall(dynamic data) {
@@ -141,7 +166,10 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
     if (data is Map<String, dynamic> && mounted) {
       final newMsg = MessageModel.fromJson(data);
       setState(() {
-        final idx = _messages.indexWhere((m) => m.id == newMsg.id || (m.isOptimistic && m.content == newMsg.content));
+        final idx = _messages.indexWhere((m) =>
+          m.id == newMsg.id ||
+          (m.content == newMsg.content && m.sender.id == newMsg.sender.id && m.createdAt.difference(newMsg.createdAt).inSeconds.abs() < 10)
+        );
         if (idx > -1) {
           _messages[idx] = newMsg;
         } else {

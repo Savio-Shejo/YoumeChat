@@ -2,12 +2,13 @@ import { Server, Socket } from 'socket.io';
 import { SocketEvents } from '../constants/socketEvents';
 import { messageService } from '../modules/messages/message.service';
 import { messageRepository } from '../modules/messages/message.repository';
+import { chatRepository } from '../modules/chats/chat.repository';
 import { loggers } from '../common/pinoLogger';
 
 export const registerMessageHandlers = (io: Server, socket: Socket) => {
   const user = socket.data.user;
 
-  // Handle message sending (support both send_message and message:send)
+  // Handle message sending
   const handleSendMessage = async (data: any, callback?: Function) => {
     try {
       const message = await messageService.sendMessage({
@@ -15,9 +16,19 @@ export const registerMessageHandlers = (io: Server, socket: Socket) => {
         senderId: user._id.toString(),
       });
 
-      // Broadcast to room under both event names for maximum client compatibility
+      // Broadcast to specific chat room
       io.to(`chat_${data.chatId}`).emit(SocketEvents.RECEIVE_MESSAGE, message);
-      io.to(`chat_${data.chatId}`).emit('message:new', message);
+
+      // Also broadcast to all chat participants' personal user rooms for instant delivery
+      const chat = await chatRepository.findById(data.chatId);
+      if (chat && chat.participants) {
+        chat.participants.forEach((p: any) => {
+          const pId = p._id ? p._id.toString() : p.toString();
+          if (pId !== user._id.toString()) {
+            io.to(`user_${pId}`).emit(SocketEvents.RECEIVE_MESSAGE, message);
+          }
+        });
+      }
 
       if (callback) callback({ success: true, data: message });
     } catch (err: any) {

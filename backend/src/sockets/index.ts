@@ -15,7 +15,7 @@ export const initSockets = (httpServer: HttpServer): Server => {
       origin: env.CORS_ORIGIN === '*' ? true : env.CORS_ORIGIN.split(','),
       credentials: true,
     },
-    transports: ['websocket', 'polling'],
+    transports: ['polling', 'websocket'],
   });
 
   if (redisClient && env.REDIS_ENABLED) {
