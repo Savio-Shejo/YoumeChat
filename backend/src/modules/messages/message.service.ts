@@ -50,13 +50,16 @@ export class MessageService {
 
     await chatRepository.incrementUnread(chat._id, recipientIds);
 
+    // Dispatch push notifications asynchronously in background without blocking instant message delivery
     for (const recipientId of recipientIds) {
-      await pushNotificationService.sendNotification(
-        recipientId,
-        'New Message',
-        dto.content || `Sent a ${dto.type || 'message'}`,
-        { chatId: dto.chatId, messageId: message._id.toString() }
-      );
+      pushNotificationService
+        .sendNotification(
+          recipientId,
+          'New Message',
+          dto.content || `Sent a ${dto.type || 'message'}`,
+          { chatId: dto.chatId, messageId: message._id.toString() }
+        )
+        .catch(() => {});
     }
 
     return message;
