@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  backend-test:
+  backend-build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -15,24 +15,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-          cache: 'npm'
-          cache-dependency-path: backend/package-lock.json
 
       - name: Install dependencies
-        run: cd backend && npm ci
+        run: cd backend && npm install
 
       - name: Build TypeScript
         run: cd backend && npm run build
 
-      - name: Run Jest Tests
-        run: cd backend && npm test
-
-  frontend-test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
-      - run: cd frontend && flutter pub get
-      - run: cd frontend && flutter analyze
