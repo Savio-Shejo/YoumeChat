@@ -49,28 +49,6 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
     });
   }
 
-  @override
-  void dispose() {
-    _scrollController.removeListener(_onScroll);
-    _scrollController.dispose();
-    _messageController.dispose();
-    _typingTimer?.cancel();
-
-    try {
-      final socketService = ref.read(socketServiceProvider);
-      socketService.leaveChat(widget.chatId);
-      final socket = socketService.socket;
-      if (socket != null) {
-        socket.off('receive_message', _onNewMessageReceived);
-        socket.off('message:new', _onNewMessageReceived);
-        socket.off('typing:start', _onTypingStart);
-        socket.off('typing:stop', _onTypingStop);
-        socket.off('call:invite', _onIncomingCall);
-      }
-    } catch (_) {}
-
-    super.dispose();
-  }
 
   void _onIncomingCall(dynamic data) {
     if (data is Map && mounted) {
@@ -235,7 +213,7 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
       content: text,
       mediaUrl: mediaUrl,
       isDeletedForEveryone: false,
-      deliveryStatus: 'sending',
+      deliveryStatus: 'sent',
       reactions: [],
       createdAt: DateTime.now(),
       isOptimistic: true,

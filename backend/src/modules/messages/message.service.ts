@@ -42,13 +42,15 @@ export class MessageService {
       deliveryStatus: 'sent',
     });
 
-    await chatRepository.updateLastMessage(chat._id, message._id);
-
     const recipientIds = chat.participants
       .map((p: any) => p._id?.toString() || p.toString())
       .filter((id: string) => id !== dto.senderId);
 
-    await chatRepository.incrementUnread(chat._id, recipientIds);
+    // Execute lastMessage update and unread counter increments concurrently
+    await Promise.all([
+      chatRepository.updateLastMessage(chat._id, message._id),
+      chatRepository.incrementUnread(chat._id, recipientIds),
+    ]);
 
     // Dispatch push notifications asynchronously in background without blocking instant message delivery
     for (const recipientId of recipientIds) {
