@@ -14,6 +14,13 @@ YoumeChat is an enterprise-grade, high-concurrency real-time messaging applicati
 
 ---
 
+## 📱 Download YoumeChat v1 APK
+
+Download and install the latest Android release APK to start messaging and testing with friends:
+👉 **[Download YoumeChat v1 APK](https://github.com/Savio-Shejo/YoumeChat/raw/main/releases/YoumeChat-v1.apk)**
+
+---
+
 ## 🌟 Expanded Platform Capabilities
 
 ### 1. Database Architecture (26 Normalized MongoDB Collections)
