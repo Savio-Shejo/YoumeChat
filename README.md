@@ -69,20 +69,20 @@
 
 ---
 
-## ✨ Key Features & Capabilities
+##  Key Features & Capabilities
 
-- ⚡ **Instant Real-Time Messaging**: Low-latency bidirectional event communication via Socket.IO.
-- 🔐 **Enterprise Authentication**: Google OAuth 2.0 via Firebase & backend custom JWT access/refresh token rotation.
-- 📞 **WebRTC Audio & Video Calls**: Peer-to-peer signaling engine supporting `call_invite`, `call_accept`, `call_reject`, and `call_end`.
-- 👥 **Group Chats & Member Roles**: Admin moderation, member management, and role-based permissions.
-- 🔍 **User Search & Contacts System**: Real-time user lookup, friend requests, contact lists, and blocking.
-- ✍️ **Typing Indicators & Read Receipts**: Live typing feedback, online/offline status, and message read confirmations.
-- 🛡️ **Admin Moderation Dashboard**: Real-time analytics, user blocking/unblocking, and audit logs.
-- 📊 **Monitoring & Observability**: Pino structured log streams (`auth.log`, `socket.log`, `database.log`), Prometheus `/metrics`, and Sentry error tracking.
+-  **Instant Real-Time Messaging**: Low-latency bidirectional event communication via Socket.IO.
+-  **Enterprise Authentication**: Google OAuth 2.0 via Firebase & backend custom JWT access/refresh token rotation.
+-  **WebRTC Audio & Video Calls**: Peer-to-peer signaling engine supporting `call_invite`, `call_accept`, `call_reject`, and `call_end`.
+-  **Group Chats & Member Roles**: Admin moderation, member management, and role-based permissions.
+-  **User Search & Contacts System**: Real-time user lookup, friend requests, contact lists, and blocking.
+-  **Typing Indicators & Read Receipts**: Live typing feedback, online/offline status, and message read confirmations.
+-  **Admin Moderation Dashboard**: Real-time analytics, user blocking/unblocking, and audit logs.
+-  **Monitoring & Observability**: Pino structured log streams (`auth.log`, `socket.log`, `database.log`), Prometheus `/metrics`, and Sentry error tracking.
 
 ---
 
-## 📐 System Architecture
+##  System Architecture
 
 ```mermaid
 graph TD
@@ -103,40 +103,40 @@ graph TD
 
 ---
 
-## 📂 Project Repository Structure
+## Project Repository Structure
 
 ```text
 YoumeChat/
-├── 📄 README.md                  # Project Documentation
-├── 📄 docker-compose.yml        # Multi-container local production compose
-├── 📁 releases/                 # Standalone release binaries
-│   └── 📱 YoumeChat-v1.apk      # Compiled Android Release APK
+├──  README.md                  # Project Documentation
+├──  docker-compose.yml        # Multi-container local production compose
+├──  releases/                 # Standalone release binaries
+│   └──  YoumeChat-v1.apk      # Compiled Android Release APK
 │
-├── 📁 backend/                  # Node.js + Express + TypeScript + Socket.IO Server
-│   ├── 📁 src/
-│   │   ├── 📁 common/           # Pino logger, Prometheus metrics, Sentry, Request ID
-│   │   ├── 📁 config/           # DB, Redis, Firebase, Cloudinary, Env configs
-│   │   ├── 📁 constants/        # HTTP status, error codes, socket events, roles
-│   │   ├── 📁 middlewares/      # Auth, role, error, security, rate limiters
-│   │   ├── 📁 modules/          # 21 Feature Modules (auth, users, chats, messages, calls, search...)
-│   │   ├── 📁 queues/           # BullMQ queue configurations
-│   │   ├── 📁 sockets/          # Socket connection, chat, message & call signaling handlers
-│   │   ├── 📁 workers/          # BullMQ queue worker processors (media, push, cleanup)
-│   │   ├── 📄 app.ts            # Express application bootstrap
-│   │   └── 📄 server.ts         # Server bootup & lifecycle management
-│   ├── 📄 Dockerfile
-│   └── 📄 package.json
+├──  backend/                  # Node.js + Express + TypeScript + Socket.IO Server
+│   ├──  src/
+│   │   ├──  common/           # Pino logger, Prometheus metrics, Sentry, Request ID
+│   │   ├──  config/           # DB, Redis, Firebase, Cloudinary, Env configs
+│   │   ├──  constants/        # HTTP status, error codes, socket events, roles
+│   │   ├──  middlewares/      # Auth, role, error, security, rate limiters
+│   │   ├──  modules/          # 21 Feature Modules (auth, users, chats, messages, calls, search...)
+│   │   ├──  queues/           # BullMQ queue configurations
+│   │   ├──  sockets/          # Socket connection, chat, message & call signaling handlers
+│   │   ├──  workers/          # BullMQ queue worker processors (media, push, cleanup)
+│   │   ├──  app.ts            # Express application bootstrap
+│   │   └──  server.ts         # Server bootup & lifecycle management
+│   ├──  Dockerfile
+│   └──  package.json
 │
-└── 📁 frontend/                 # Flutter Material 3 Mobile & Web Client
-    ├── 📁 lib/
-    │   ├── 📁 core/             # Theme, network, error, storage, constants
-    │   ├── 📁 features/         # Auth, Profile, Chat, Group, Admin, Settings
-    │   ├── 📁 shared/           # Shared widgets, domain models, design system
-    │   ├── 📁 routes/           # GoRouter route management with guards
-    │   ├── 📁 services/         # SocketService, Dio ApiClient, SecureStorage
-    │   ├── 📁 providers/        # Riverpod global state management
-    │   └── 📄 main.dart         # Flutter application entry point
-    └── 📄 pubspec.yaml
+└──  frontend/                 # Flutter Material 3 Mobile & Web Client
+    ├──  lib/
+    │   ├──  core/             # Theme, network, error, storage, constants
+    │   ├──  features/         # Auth, Profile, Chat, Group, Admin, Settings
+    │   ├──  shared/           # Shared widgets, domain models, design system
+    │   ├──  routes/           # GoRouter route management with guards
+    │   ├──  services/         # SocketService, Dio ApiClient, SecureStorage
+    │   ├──  providers/        # Riverpod global state management
+    │   └──  main.dart         # Flutter application entry point
+    └──  pubspec.yaml
 ```
 
 ---
@@ -188,7 +188,7 @@ flutter run
 
 <div align="center">
 
-### 👨‍💻 Created & Maintained by Savio Shejo
+###  Created & Maintained by Savio Shejo
 
 Distributed under the MIT License. See `LICENSE` for more information.
 
