@@ -6,6 +6,7 @@ import '../../providers/auth_provider.dart';
 import '../../providers/chat_provider.dart';
 import '../../services/socket_service.dart';
 import '../../shared/models/message_model.dart';
+import '../../shared/models/chat_model.dart';
 import '../../shared/models/user_model.dart';
 import 'dart:async';
 
@@ -389,19 +390,75 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
   Widget build(BuildContext context) {
     final messagesAsync = ref.watch(chatMessagesProvider(widget.chatId));
     final currentUser = ref.watch(authProvider).user;
+    final chats = ref.watch(chatListProvider).asData?.value ?? [];
+
+    final currentChat = chats.firstWhere(
+      (c) => c.id == widget.chatId,
+      orElse: () => ChatModel(id: widget.chatId, type: 'private', participants: [], isPinnedBy: [], isMutedBy: [], isArchivedBy: []),
+    );
+
+    UserModel? recipient;
+    if (currentChat.participants.isNotEmpty) {
+      recipient = currentChat.participants.firstWhere(
+        (p) => p.id.isNotEmpty && p.id != currentUser?.id,
+        orElse: () => currentChat.participants.first,
+      );
+    }
+    if ((recipient == null || recipient.displayName.isEmpty || recipient.displayName == 'Chat User') && _messages.isNotEmpty) {
+      final otherMsg = _messages.firstWhere(
+        (m) => m.sender.id.isNotEmpty && m.sender.id != currentUser?.id,
+        orElse: () => _messages.first,
+      );
+      if (otherMsg.sender.id != currentUser?.id) {
+        recipient = otherMsg.sender;
+      }
+    }
+
+    final headerName = (recipient != null && recipient.displayName.isNotEmpty)
+        ? recipient.displayName
+        : (recipient?.username.isNotEmpty == true ? recipient!.username : 'Chat User');
+    final avatarUrl = recipient?.avatarUrl ?? '';
+    final isOnline = recipient?.isOnline ?? true;
 
     return Scaffold(
       appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        titleSpacing: 0,
+        title: Row(
           children: [
-            const Text('Chat Conversation', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-            Text(
-              _isOtherTyping ? '$_typingUsername is typing...' : 'Online',
-              style: TextStyle(
-                fontSize: 12,
-                color: _isOtherTyping ? AppColors.primaryLight : AppColors.onlineGreen,
-                fontWeight: _isOtherTyping ? FontWeight.bold : FontWeight.normal,
+            CircleAvatar(
+              radius: 18,
+              backgroundColor: AppColors.primary,
+              backgroundImage: avatarUrl.isNotEmpty ? NetworkImage(avatarUrl) : null,
+              child: avatarUrl.isEmpty
+                  ? Text(
+                      (headerName.isNotEmpty ? headerName[0] : 'U').toUpperCase(),
+                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
+                    )
+                  : null,
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    headerName,
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Text(
+                    _isOtherTyping
+                        ? '$_typingUsername is typing...'
+                        : (isOnline ? 'Online' : 'Offline'),
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: _isOtherTyping
+                          ? AppColors.primaryLight
+                          : (isOnline ? AppColors.onlineGreen : AppColors.textMuted),
+                      fontWeight: _isOtherTyping ? FontWeight.bold : FontWeight.normal,
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
