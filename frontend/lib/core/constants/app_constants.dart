@@ -1,7 +1,7 @@
 class AppConstants {
   static const String appName = 'YoumeChat';
-  static const String baseUrl = 'http://localhost:5000/api/v1';
-  static const String socketUrl = 'http://localhost:5000';
+  static const String baseUrl = 'https://youmechat.onrender.com/api/v1';
+  static const String socketUrl = 'https://youmechat.onrender.com';
 
   // Secure Storage Keys
   static const String tokenKey = 'youmechat_access_token';
