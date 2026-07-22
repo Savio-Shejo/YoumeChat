@@ -29,6 +29,14 @@ app.use(globalRateLimiter);
 // Prometheus Metrics Endpoint
 app.get('/metrics', metricsHandler);
 
+// Welcome / Root Endpoint
+app.get('/', (req: Request, res: Response) => {
+  return ResponseHandler.success(res, 'Welcome to YoumeChat API Server', {
+    health: '/health',
+    api: `/api/${env.API_VERSION}`,
+  });
+});
+
 // Health, Readiness & Liveness Endpoints
 app.get('/health', (req: Request, res: Response) => {
   return ResponseHandler.success(res, 'YoumeChat API server is healthy and operational', {
