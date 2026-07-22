@@ -12,7 +12,20 @@
           "package_name": "com.example.youmechat"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "110812357240-e245mu01bs5tshe6nb34khuu5bjvc63h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.youmechat",
+            "certificate_hash": "f454026d41b95ee0802eb066a9a8b59423706e17"
+          }
+        },
+        {
+          "client_id": "110812357240-4ue31d26l78am8558r8abifi6feqp3t1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAaMilzHIV-hus6geMDn2W3SoWxE2etD4w"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "110812357240-4ue31d26l78am8558r8abifi6feqp3t1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
