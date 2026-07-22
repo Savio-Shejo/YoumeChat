@@ -5,6 +5,7 @@ class SocketService {
   io.Socket? _socket;
   bool _isConnected = false;
   String? _currentChatId;
+  String? _lastToken;
 
   bool get isConnected => _isConnected;
   io.Socket? get socket => _socket;
