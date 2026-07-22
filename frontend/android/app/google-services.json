@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "110812357240",
+    "project_id": "appmeow-71aba",
+    "storage_bucket": "appmeow-71aba.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:110812357240:android:c1018c3f4a9005d3a4038d",
+        "android_client_info": {
+          "package_name": "com.example.youmechat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAaMilzHIV-hus6geMDn2W3SoWxE2etD4w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

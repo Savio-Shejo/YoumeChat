@@ -1,0 +1,17 @@
+# Node dependencies & logs
+node_modules/
+dist/
+logs/
+.env
+*.log
+
+# Build & Flutter
+frontend/build/
+frontend/.dart_tool/
+frontend/.flutter-plugins
+frontend/.flutter-plugins-dependencies
+
+# IDEs
+.idea/
+.vscode/
+*.iml
