@@ -15,9 +15,8 @@
     "noUnusedParameters": false,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "moduleResolution": "node",
     "typeRoots": ["./node_modules/@types"],
-    "baseUrl": ".",
+    "ignoreDeprecations": "5.0",
     "paths": {
       "@config/*": ["./src/config/*"],
       "@controllers/*": ["./src/controllers/*"],
