@@ -1,7 +1,7 @@
 class AppConstants {
   static const String appName = 'YoumeChat';
-  static const String baseUrl = 'http://100.21.15.54:5000/api/v1';
-  static const String socketUrl = 'http://100.21.15.54:5000';
+  static const String baseUrl = 'https://youmechat-backend.loca.lt/api/v1';
+  static const String socketUrl = 'https://youmechat-backend.loca.lt';
 
   // Secure Storage Keys
   static const String tokenKey = 'youmechat_access_token';
