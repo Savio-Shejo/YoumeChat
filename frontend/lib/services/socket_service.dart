@@ -81,13 +81,11 @@ class SocketService {
     _socket?.emit('read:receipt', {'chatId': chatId});
   }
 
-  void sendMessage(String chatId, String content, {String type = 'text', Function(dynamic)? ack}) {
-    _socket?.emitWithAck('message:send', {
+  void sendMessage(String chatId, String content, {String type = 'text'}) {
+    _socket?.emit('message:send', {
       'chatId': chatId,
       'type': type,
       'content': content,
-    }, ack: (response) {
-      if (ack != null) ack(response);
     });
   }
 

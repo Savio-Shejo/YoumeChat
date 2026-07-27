@@ -145,13 +145,15 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
     if (data is Map<String, dynamic> && mounted) {
       final newMsg = MessageModel.fromJson(data);
       setState(() {
-        final idx = _messages.indexWhere((m) =>
-          m.id == newMsg.id ||
-          (m.content == newMsg.content && m.sender.id == newMsg.sender.id && m.createdAt.difference(newMsg.createdAt).inSeconds.abs() < 10)
+        // Remove optimistic duplicate first (same content + sender + within 30s)
+        _messages.removeWhere((m) =>
+          m.isOptimistic &&
+          m.content == newMsg.content &&
+          m.sender.id == newMsg.sender.id &&
+          newMsg.createdAt.difference(m.createdAt).inSeconds.abs() < 30
         );
-        if (idx > -1) {
-          _messages[idx] = newMsg;
-        } else {
+        // Add confirmed message if not already present
+        if (!_messages.any((m) => m.id == newMsg.id)) {
           _messages.insert(0, newMsg);
         }
       });
@@ -229,17 +231,7 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
 
     final socketService = ref.read(socketServiceProvider);
     socketService.stopTyping(widget.chatId);
-    socketService.sendMessage(widget.chatId, text, type: type, ack: (response) {
-      if (response != null && response['success'] == true && mounted) {
-        final confirmedMsg = MessageModel.fromJson(response['data']);
-        setState(() {
-          final idx = _messages.indexWhere((m) => m.id == tempId);
-          if (idx > -1) {
-            _messages[idx] = confirmedMsg;
-          }
-        });
-      }
-    });
+    socketService.sendMessage(widget.chatId, text, type: type);
   }
 
   void _initiateCall(String callType) {
