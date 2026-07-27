@@ -66,12 +66,13 @@ class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         final chatId = res.data['data']['chat']['_id'] ?? res.data['data']['chat']['id'];
-        ref.refresh(chatListProvider);
+        ref.invalidate(chatListProvider);
         if (mounted) {
           context.pushReplacement('/chat/$chatId');
         }
       }
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to create group: $e'), backgroundColor: AppColors.errorRed),
       );
@@ -102,7 +103,7 @@ class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
               children: [
                 CircleAvatar(
                   radius: 28,
-                  backgroundColor: AppColors.primary.withOpacity(0.2),
+                  backgroundColor: AppColors.primary.withValues(alpha: 0.2),
                   child: const Icon(Icons.group, size: 32, color: AppColors.primaryLight),
                 ),
                 const SizedBox(width: 16),
@@ -149,10 +150,10 @@ class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
                             radius: 20,
                             backgroundColor: AppColors.primary,
                             backgroundImage: member.avatarUrl.isNotEmpty ? NetworkImage(member.avatarUrl) : null,
-                            child: member.avatarUrl.isEmpty ? Text(member.displayName.substring(0, 1).toUpperCase()) : null,
+                            child: member.avatarUrl.isEmpty ? Text(member.avatarInitial) : null,
                           ),
                           const SizedBox(height: 4),
-                          Text(member.displayName, style: const TextStyle(fontSize: 10)),
+                          Text(member.displayLabel, style: const TextStyle(fontSize: 10)),
                         ],
                       ),
                       Positioned(
@@ -206,9 +207,9 @@ class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
                   leading: CircleAvatar(
                     backgroundColor: AppColors.primary,
                     backgroundImage: user.avatarUrl.isNotEmpty ? NetworkImage(user.avatarUrl) : null,
-                    child: user.avatarUrl.isEmpty ? Text(user.displayName.substring(0, 1).toUpperCase()) : null,
+                    child: user.avatarUrl.isEmpty ? Text(user.avatarInitial) : null,
                   ),
-                  title: Text(user.displayName, style: const TextStyle(fontWeight: FontWeight.bold)),
+                  title: Text(user.displayLabel, style: const TextStyle(fontWeight: FontWeight.bold)),
                   subtitle: Text('@${user.username}'),
                   trailing: Icon(
                     isSelected ? Icons.check_circle : Icons.circle_outlined,

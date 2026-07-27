@@ -4,7 +4,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../../core/theme/app_colors.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/chat_provider.dart';
-import '../../services/socket_service.dart';
 import '../../shared/models/message_model.dart';
 import '../../shared/models/chat_model.dart';
 import '../../shared/models/user_model.dart';
@@ -282,7 +281,7 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          CircleAvatar(radius: 26, backgroundColor: color.withOpacity(0.2), child: Icon(icon, color: color, size: 28)),
+          CircleAvatar(radius: 26, backgroundColor: color.withValues(alpha: 0.2), child: Icon(icon, color: color, size: 28)),
           const SizedBox(height: 8),
           Text(label, style: const TextStyle(fontSize: 12, color: AppColors.textPrimary)),
         ],
@@ -397,7 +396,7 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
         orElse: () => currentChat.participants.first,
       );
     }
-    if ((recipient == null || recipient.displayName.isEmpty || recipient.displayName == 'Chat User') && _messages.isNotEmpty) {
+    if ((recipient == null || recipient.displayLabel == 'Chat User') && _messages.isNotEmpty) {
       final otherMsg = _messages.firstWhere(
         (m) => m.sender.id.isNotEmpty && m.sender.id != currentUser?.id,
         orElse: () => _messages.first,
@@ -407,9 +406,7 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
       }
     }
 
-    final headerName = (recipient != null && recipient.displayName.isNotEmpty)
-        ? recipient.displayName
-        : (recipient?.username.isNotEmpty == true ? recipient!.username : 'Chat User');
+    final headerName = recipient?.displayLabel ?? 'Chat User';
     final avatarUrl = recipient?.avatarUrl ?? '';
     final isOnline = presenceMap[recipient?.id ?? ''] ?? (recipient?.isOnline ?? false);
 
@@ -424,7 +421,7 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
               backgroundImage: avatarUrl.isNotEmpty ? NetworkImage(avatarUrl) : null,
               child: avatarUrl.isEmpty
                   ? Text(
-                      (headerName.isNotEmpty ? headerName[0] : 'U').toUpperCase(),
+                      recipient?.avatarInitial ?? 'U',
                       style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
                     )
                   : null,
@@ -543,7 +540,7 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
               alignment: Alignment.centerLeft,
-              color: AppColors.darkSurface.withOpacity(0.5),
+              color: AppColors.darkSurface.withValues(alpha: 0.5),
               child: Text(
                 '$_typingUsername is typing...',
                 style: const TextStyle(color: AppColors.primaryLight, fontSize: 12, fontStyle: FontStyle.italic),

@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:socket_io_client/socket_io_client.dart' as io;
 import '../core/network/remote_config.dart';
 
@@ -5,13 +7,11 @@ class SocketService {
   io.Socket? _socket;
   bool _isConnected = false;
   String? _currentChatId;
-  String? _lastToken;
 
   bool get isConnected => _isConnected;
   io.Socket? get socket => _socket;
 
   void connect(String token) {
-    _lastToken = token;
     if (_socket != null && _socket!.connected) return;
 
     _socket = io.io(
@@ -29,7 +29,7 @@ class SocketService {
 
     _socket!.onConnect((_) {
       _isConnected = true;
-      print('Socket.IO Client Connected successfully');
+      developer.log('Socket.IO client connected successfully', name: 'SocketService');
       if (_currentChatId != null) {
         _socket?.emit('join_chat', {'chatId': _currentChatId});
       }
@@ -37,7 +37,7 @@ class SocketService {
 
     _socket!.onReconnect((_) {
       _isConnected = true;
-      print('Socket.IO Reconnected to server');
+      developer.log('Socket.IO reconnected to server', name: 'SocketService');
       if (_currentChatId != null) {
         _socket?.emit('join_chat', {'chatId': _currentChatId});
       }
@@ -45,11 +45,11 @@ class SocketService {
 
     _socket!.onDisconnect((_) {
       _isConnected = false;
-      print('Socket.IO Client Disconnected');
+      developer.log('Socket.IO client disconnected', name: 'SocketService');
     });
 
     _socket!.onError((data) {
-      print('Socket.IO Error: $data');
+      developer.log('Socket.IO error: $data', name: 'SocketService');
     });
   }
 

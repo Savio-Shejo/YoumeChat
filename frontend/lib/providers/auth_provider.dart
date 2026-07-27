@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../core/storage/storage_service.dart';
@@ -37,6 +38,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
   final ApiClient _apiClient;
   final StorageService _storageService;
   final SocketService _socketService;
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: ['email', 'profile'],
+    serverClientId: '110812357240-4ue31d26l78am8558r8abifi6feqp3t1.apps.googleusercontent.com',
+  );
 
   AuthNotifier(this._apiClient, this._storageService, this._socketService) : super(AuthState()) {
     checkInitialAuth();
@@ -61,25 +66,40 @@ class AuthNotifier extends StateNotifier<AuthState> {
     state = state.copyWith(isLoading: false);
   }
 
+  Future<void> _signOutProviders() async {
+    try {
+      await _googleSignIn.signOut();
+    } catch (_) {}
+    try {
+      await FirebaseAuth.instance.signOut();
+    } catch (_) {}
+  }
+
   /// Live Google Sign-In via Firebase Auth & Backend JWT Generation
   Future<bool> signInWithGoogle() async {
     state = state.copyWith(isLoading: true, error: null);
     try {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn(
-        serverClientId: '110812357240-4ue31d26l78am8558r8abifi6feqp3t1.apps.googleusercontent.com',
-      ).signIn();
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
         state = state.copyWith(isLoading: false);
         return false; // User cancelled Google login dialog
       }
 
       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      if (googleAuth.accessToken == null && googleAuth.idToken == null) {
+        throw StateError('Google sign-in did not return credentials');
+      }
+
       final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
       final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+      if (userCredential.user == null) {
+        throw StateError('Firebase sign-in completed without a user session');
+      }
+
       final String? firebaseIdToken = await userCredential.user?.getIdToken();
 
       if (firebaseIdToken == null) {
@@ -87,8 +107,31 @@ class AuthNotifier extends StateNotifier<AuthState> {
       }
 
       return await _authenticateWithBackendToken(firebaseIdToken);
+    } on FirebaseAuthException catch (e) {
+      await _signOutProviders();
+      state = state.copyWith(
+        isLoading: false,
+        error: 'Firebase auth failed: ${e.message ?? e.code}',
+      );
+      return false;
+    } on DioException catch (e) {
+      await _signOutProviders();
+      final statusCode = e.response?.statusCode;
+      if (statusCode == 502 || statusCode == 503 || statusCode == 504) {
+        state = state.copyWith(
+          isLoading: false,
+          error: 'Backend is temporarily unavailable. Try again in a moment.',
+        );
+        return false;
+      }
+      state = state.copyWith(
+        isLoading: false,
+        error: 'Backend sign-in failed: ${e.response?.data?['message'] ?? e.message ?? 'Unknown error'}',
+      );
+      return false;
     } catch (e) {
-      state = state.copyWith(isLoading: false, error: 'Google Sign-In Error: ${e.toString()}');
+      await _signOutProviders();
+      state = state.copyWith(isLoading: false, error: 'Auth failed: ${e.toString()}');
       return false;
     }
   }
@@ -111,9 +154,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
       _socketService.connect(accessToken);
       state = state.copyWith(user: user, isLoading: false);
       return true;
-    } else {
-      throw Exception(res.data['message'] ?? 'Authentication failed');
     }
+
+    throw Exception(res.data['message'] ?? 'Authentication failed');
   }
 
   /// Development Mock Authentication fallback
@@ -135,7 +178,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       } catch (_) {}
     }
     try {
-      await GoogleSignIn().signOut();
+      await _googleSignIn.signOut();
       await FirebaseAuth.instance.signOut();
     } catch (_) {}
 

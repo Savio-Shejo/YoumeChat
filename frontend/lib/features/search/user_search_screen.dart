@@ -60,12 +60,13 @@ class _UserSearchScreenState extends ConsumerState<UserSearchScreen> {
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         final chatId = res.data['data']['_id'] ?? res.data['data']['id'];
-        ref.refresh(chatListProvider);
+        ref.invalidate(chatListProvider);
         if (mounted) {
           context.push('/chat/$chatId');
         }
       }
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to start chat: $e'), backgroundColor: AppColors.errorRed),
       );
@@ -138,7 +139,7 @@ class _UserSearchScreenState extends ConsumerState<UserSearchScreen> {
                               backgroundColor: AppColors.primary,
                               backgroundImage: user.avatarUrl.isNotEmpty ? NetworkImage(user.avatarUrl) : null,
                               child: user.avatarUrl.isEmpty
-                                  ? Text(user.displayName.substring(0, 1).toUpperCase())
+                                  ? Text(user.avatarInitial)
                                   : null,
                             ),
                             if (user.isOnline)
@@ -157,7 +158,7 @@ class _UserSearchScreenState extends ConsumerState<UserSearchScreen> {
                               ),
                           ],
                         ),
-                        title: Text(user.displayName, style: const TextStyle(fontWeight: FontWeight.bold)),
+                        title: Text(user.displayLabel, style: const TextStyle(fontWeight: FontWeight.bold)),
                         subtitle: Text('@${user.username} • ${user.statusMessage}', maxLines: 1, overflow: TextOverflow.ellipsis),
                         trailing: const Icon(Icons.message_outlined, color: AppColors.primary),
                       );

@@ -113,7 +113,7 @@ class ChatListScreen extends ConsumerWidget {
                       backgroundImage: (chat.type == 'group' ? null : (otherUser.avatarUrl.isNotEmpty ? NetworkImage(otherUser.avatarUrl) : null)),
                       child: chat.type == 'group'
                           ? const Icon(Icons.group, color: Colors.white)
-                          : (otherUser.avatarUrl.isEmpty ? Text(otherUser.displayName.substring(0, 1).toUpperCase()) : null),
+                          : (otherUser.avatarUrl.isEmpty ? Text(otherUser.avatarInitial) : null),
                     ),
                     if (chat.type != 'group' && (presenceMap[otherUser.id] ?? otherUser.isOnline))
                       Positioned(
@@ -132,7 +132,7 @@ class ChatListScreen extends ConsumerWidget {
                   ],
                 ),
                 title: Text(
-                  chat.type == 'group' ? 'Group Chat' : otherUser.displayName,
+                  chat.type == 'group' ? 'Group Chat' : otherUser.displayLabel,
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 subtitle: Text(

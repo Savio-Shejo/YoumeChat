@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../core/network/api_client.dart';
 import '../shared/models/chat_model.dart';
 import '../shared/models/message_model.dart';
 import '../services/socket_service.dart';

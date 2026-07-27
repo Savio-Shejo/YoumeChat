@@ -23,7 +23,7 @@ class ProfileScreen extends ConsumerWidget {
                     radius: 54,
                     backgroundColor: AppColors.primary,
                     child: Text(
-                      user?.displayName.substring(0, 1).toUpperCase() ?? 'U',
+                      user?.avatarInitial ?? 'U',
                       style: const TextStyle(fontSize: 36, color: Colors.white, fontWeight: FontWeight.bold),
                     ),
                   ),
@@ -44,7 +44,7 @@ class ProfileScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 24),
             Text(
-              user?.displayName ?? 'User Name',
+              user?.displayLabel ?? 'User Name',
               style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
             Text(
@@ -72,7 +72,7 @@ class ProfileScreen extends ConsumerWidget {
             ElevatedButton.icon(
               onPressed: () => ref.read(authProvider.notifier).logout(),
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.errorRed.withOpacity(0.15),
+                backgroundColor: AppColors.errorRed.withValues(alpha: 0.15),
                 foregroundColor: AppColors.errorRed,
               ),
               icon: const Icon(Icons.logout),

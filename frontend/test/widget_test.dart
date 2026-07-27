@@ -1,30 +1,40 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:youmechat/core/storage/storage_service.dart';
 import 'package:youmechat/main.dart';
+import 'package:youmechat/providers/auth_provider.dart';
+
+class FakeStorageService extends StorageService {
+  @override
+  Future<void> saveToken(String token) async {}
+
+  @override
+  Future<String?> getToken() async => null;
+
+  @override
+  Future<void> saveRefreshToken(String token) async {}
+
+  @override
+  Future<String?> getRefreshToken() async => null;
+
+  @override
+  Future<void> clearAll() async {}
+}
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
-
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+  testWidgets('YoumeChat app builds login flow', (WidgetTester tester) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          storageServiceProvider.overrideWithValue(FakeStorageService()),
+        ],
+        child: const YoumeChatApp(),
+      ),
+    );
     await tester.pump();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.text('YoumeChat'), findsOneWidget);
+    expect(find.text('Sign in with Google'), findsOneWidget);
   });
 }

@@ -25,6 +25,15 @@ class UserModel {
     required this.isBanned,
   });
 
+  String get displayLabel {
+    if (displayName.trim().isNotEmpty) return displayName.trim();
+    if (username.trim().isNotEmpty) return username.trim();
+    if (email.trim().isNotEmpty) return email.trim();
+    return 'User';
+  }
+
+  String get avatarInitial => displayLabel.substring(0, 1).toUpperCase();
+
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       id: json['_id'] ?? json['id'] ?? '',
