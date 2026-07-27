@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import '../constants/app_constants.dart';
+import 'remote_config.dart';
 import '../storage/storage_service.dart';
 
 class ApiClient {
@@ -9,7 +9,7 @@ class ApiClient {
   ApiClient({required this.storageService}) {
     dio = Dio(
       BaseOptions(
-        baseUrl: AppConstants.baseUrl,
+        baseUrl: '${RemoteConfig.backendUrl}/api/v1',
         connectTimeout: const Duration(seconds: 15),
         receiveTimeout: const Duration(seconds: 15),
         headers: {
@@ -36,7 +36,7 @@ class ApiClient {
             if (refreshToken != null) {
               try {
                 final refreshResponse = await Dio().post(
-                  '${AppConstants.baseUrl}/auth/refresh-token',
+                  '${RemoteConfig.backendUrl}/api/v1/auth/refresh-token',
                   data: {'refreshToken': refreshToken},
                 );
 

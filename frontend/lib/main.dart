@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'core/theme/app_theme.dart';
+import 'core/network/remote_config.dart';
 import 'routes/app_router.dart';
 
 void main() async {
@@ -11,6 +12,8 @@ void main() async {
   } catch (e) {
     debugPrint('Firebase Initialization Warning: $e');
   }
+  // Fetch live backend URL from GitHub config — no APK rebuild needed when URL changes!
+  await RemoteConfig.fetch();
   runApp(const ProviderScope(child: YoumeChatApp()));
 }
 

@@ -1,5 +1,5 @@
 import 'package:socket_io_client/socket_io_client.dart' as io;
-import '../core/constants/app_constants.dart';
+import '../core/network/remote_config.dart';
 
 class SocketService {
   io.Socket? _socket;
@@ -15,7 +15,7 @@ class SocketService {
     if (_socket != null && _socket!.connected) return;
 
     _socket = io.io(
-      AppConstants.socketUrl,
+      RemoteConfig.backendUrl,
       io.OptionBuilder()
           .setTransports(['polling', 'websocket'])
           .setAuth({'token': token})
