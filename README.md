@@ -6,13 +6,7 @@
   <b>A high-concurrency, cross-platform real-time messaging engine built with Clean Architecture, Socket.IO, WebRTC, and Flutter.</b>
 </p>
 
-[![Release](https://img.shields.io/badge/Release-v1.0.0-blue.svg?style=for-the-badge&logo=android)](https://github.com/Savio-Shejo/YoumeChat/raw/main/releases/YoumeChat-v1.apk)
-[![Live Server Status](https://img.shields.io/badge/Backend-Live%20on%20Render-success.svg?style=for-the-badge&logo=render)](https://youmechat.onrender.com/health)
 [![License](https://img.shields.io/badge/License-MIT-purple.svg?style=for-the-badge)](LICENSE)
-
-<br/>
-
-### 📱 [📥 Download YoumeChat v1.apk — 18.7 MB (Fast Download)](https://github.com/Savio-Shejo/YoumeChat/raw/main/releases/YoumeChat-v1.apk)
 
 ---
 
