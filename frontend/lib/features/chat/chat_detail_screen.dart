@@ -391,6 +391,7 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
     final messagesAsync = ref.watch(chatMessagesProvider(widget.chatId));
     final currentUser = ref.watch(authProvider).user;
     final chats = ref.watch(chatListProvider).asData?.value ?? [];
+    final presenceMap = ref.watch(presenceProvider);
 
     final currentChat = chats.firstWhere(
       (c) => c.id == widget.chatId,
@@ -418,7 +419,7 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
         ? recipient.displayName
         : (recipient?.username.isNotEmpty == true ? recipient!.username : 'Chat User');
     final avatarUrl = recipient?.avatarUrl ?? '';
-    final isOnline = recipient?.isOnline ?? true;
+    final isOnline = presenceMap[recipient?.id ?? ''] ?? (recipient?.isOnline ?? false);
 
     return Scaffold(
       appBar: AppBar(

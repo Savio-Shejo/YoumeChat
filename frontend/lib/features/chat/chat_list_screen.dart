@@ -12,6 +12,7 @@ class ChatListScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currentUser = ref.watch(authProvider).user;
     final chatsAsync = ref.watch(chatListProvider);
+    final presenceMap = ref.watch(presenceProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -114,7 +115,7 @@ class ChatListScreen extends ConsumerWidget {
                           ? const Icon(Icons.group, color: Colors.white)
                           : (otherUser.avatarUrl.isEmpty ? Text(otherUser.displayName.substring(0, 1).toUpperCase()) : null),
                     ),
-                    if (chat.type != 'group' && otherUser.isOnline)
+                    if (chat.type != 'group' && (presenceMap[otherUser.id] ?? otherUser.isOnline))
                       Positioned(
                         right: 0,
                         bottom: 0,
